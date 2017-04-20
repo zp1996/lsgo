@@ -1,0 +1,20 @@
+{
+  "name": "check-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "supervisor index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.1.1",
+    "lsgo-file": "^1.0.0",
+    "mysql": "^2.13.0",
+    "sequelize": "^3.30.4"
+  }
+}
