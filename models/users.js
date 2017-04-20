@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize'),
-    sequelize = require('./sequelize');
+    sequelize = require('./sequelize'),
+    { getErrorMsg } = require('../helpers/error');
 
 const BaseGet = field => {
     return function() {
@@ -24,7 +25,7 @@ const Users = sequelize.define('users', {
 
 exports.findAllUser = async () => {
     const users = await Users.findAll({
-        'attributes': ['id', 'username']
+        attributes: ['id', 'username']
     });
     const res = [];
     for (let user of users) {
@@ -38,10 +39,49 @@ exports.findAllUser = async () => {
 
 exports.findUserById = async id => {
     const user = await Users.findById(id, {
-        'attributes': ['username', 'email']
+        attributes: ['username', 'email']
     });
     return user && {
         email: user.email,
         username: user.username
     };
+};
+
+const findUser = async (conditions) => {
+    const users = await Users.findAll({
+        where: conditions,
+        attributes: ['username', 'email']
+    });
+    const res = [];
+    if (Users != null) {
+        for (let user of users) {
+            res.push({
+                email: user.email,
+                username: user.username
+            });
+        }
+    }
+    return res;
+};
+exports.findUser = findUser;
+
+exports.addUser = async (username, email) => {
+    const users = await findUser({
+        '$or': [ { username }, { email } ]
+    });
+    let err = null;
+    if (users.length) {
+        if (username === users[0].username) {
+            err = getErrorMsg('用户名被占用');
+        } else if (email === users[0].email) {
+            err = getErrorMsg('邮箱被占用');
+        }
+    } else {
+        await Users.create({
+            username,
+            email,
+            status: 1
+        });
+    }
+    return err;
 };

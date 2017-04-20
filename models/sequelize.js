@@ -4,6 +4,9 @@ const getSequelize = () =>
     new Sequelize('db', 'root', '123456', {
         host: 'localhost',
         dialect: 'mysql',
+        define: {
+            underscored: true
+        },
         pool: {
             max: 10,
             min: 0,
