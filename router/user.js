@@ -1,4 +1,4 @@
-const { findAllUser, findUserById, addUser } = require('../models/users.js'),
+const { findAllUser, findUserById, addUser, deleteUser } = require('../models/users.js'),
     verify = require('../helpers/verify.js');
 
 const ResponseJSON = (ctx, data) => {
@@ -30,6 +30,15 @@ module.exports = router => {
         if (err == null) {
             return ResponseJSON(ctx, { status: 200 });
         }
+        ResponseJSON(ctx, err);
+    });
+    router.get('/user/del/:id', async ctx => {
+        const { id } = ctx.params;
+        let err = await deleteUser(id);
+        err = err == null ? {
+            status: 200,
+            msg: '该用户禁用成功'
+        } : err;
         ResponseJSON(ctx, err);
     });
 };

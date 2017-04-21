@@ -20,12 +20,16 @@ const Users = sequelize.define('users', {
     email: {
         type: Sequelize.STRING,
         get: BaseGet('email')
+    },
+    status: {
+        type: Sequelize.INTEGER
     }
 });
 
 exports.findAllUser = async () => {
     const users = await Users.findAll({
-        attributes: ['id', 'username']
+        attributes: ['id', 'username'],
+        where: { status: 1 }
     });
     const res = [];
     for (let user of users) {
@@ -83,5 +87,16 @@ exports.addUser = async (username, email) => {
             status: 1
         });
     }
+    return err;
+};
+
+exports.deleteUser = async id => {
+    let err = null;
+    const user = await Users.update({
+        status: 0
+    }, {
+        where: { id }
+    });
+    Boolean(user[0]) || (err = getErrorMsg('该用户不存在'));
     return err;
 };
