@@ -15,7 +15,7 @@ module.exports = data => {
     const keys = Object.keys(data);
     let err = null;
     keys.every(key => {
-        const flag = verify[key].pattern.test(data[key]);
+        const flag = data[key] && verify[key].pattern.test(data[key]);
         if (flag) {
             return flag;
         } else {
